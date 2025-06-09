@@ -1,0 +1,18 @@
+# Specifies the version of the Docker Compose file format
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5001:5001" # Maps host port 5001 to container port 5001
+    environment:
+      # Injects the API key from a .env file in the root directory
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80" # Maps host port 5173 to the container's Nginx port 80
+    depends_on:
+      - backend # Tells Compose to start the backend before the frontend

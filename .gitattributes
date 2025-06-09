@@ -1,0 +1,15 @@
+# Set default behavior to automatically handle text files
+* text=auto
+
+# These files should always have Unix-style (LF) line endings in the repository
+*.js eol=lf
+*.jsx eol=lf
+*.css eol=lf
+*.html eol=lf
+*.json eol=lf
+*.md eol=lf
+*.yml eol=lf
+*.conf eol=lf
+Dockerfile eol=lf
+.dockerignore eol=lf
+.gitignore eol=lf
