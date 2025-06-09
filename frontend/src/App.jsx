@@ -13,7 +13,7 @@ function App() {
         setDocumentation('');
 
         try {
-            const response = await fetch('http://localhost:5001/api/document', {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/document`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
