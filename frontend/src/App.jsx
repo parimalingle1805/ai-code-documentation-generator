@@ -1,7 +1,7 @@
 import {useCallback, useState} from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-
+import blackboardTheme from 'monaco-themes/themes/Blackboard.json';
 import Editor from '@monaco-editor/react';
 
 
@@ -13,6 +13,11 @@ function App() {
 
     function handleEditorChange(value, event) {
         setCode(value);
+    }
+
+    function handleEditorWillMount(monaco) {
+        // --- CHANGED: Register our theme under the name "blackboard" ---
+        monaco.editor.defineTheme('blackboard', blackboardTheme);
     }
     // Make the function async to use await
     const handleSubmit = async () => {
@@ -62,14 +67,21 @@ function App() {
             <h1>AI Code Documentation Generator</h1>
             <p>Paste your function in any language below and get instant documentation.</p>
 
-            <div className="code-editor-container">
+            <div className="editor-container">
                 <Editor
-                    height="20vh" // Set height, e.g., 20% of viewport height
-                    theme="vs-dark" // Use the built-in VS Code dark theme
+                    height="30vh"
                     defaultLanguage="javascript"
                     value={code}
                     onChange={handleEditorChange}
+                    beforeMount={handleEditorWillMount}
+                    theme="blackboard"
                 />
+                {/* This placeholder div will only render when 'code' is empty */}
+                {!code && (
+                    <div className="editor-placeholder">
+                        e.g., function greet(name) {'{'}{'  '}return `Hello, ${'${name}'}!`;{'}'}
+                    </div>
+                )}
             </div>
 
             <button onClick={handleSubmit} disabled={isLoading || !code}>
