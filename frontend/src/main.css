@@ -28,17 +28,14 @@ body {
   align-items: center;
 }
 
-textarea {
+.code-editor-container {
   width: 80%;
-  min-height: 200px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid transparent;
-  font-size: 1em;
-  font-family: 'Courier New', Courier, monospace;
-  background-color: #1a1a1a;
-  color: #f9f9f9;
-  resize: vertical;
+  text-align: left;
+  display: flex;
+}
+
+.code-editor-instance {
+  width: 100%;
 }
 
 button {
@@ -72,11 +69,6 @@ button:disabled {
   /* We are removing the white-space rules from here */
   font-family: 'Courier New', Courier, monospace;
   border: 1px solid #444;
-}
-
-.documentation-display pre {
-  white-space: pre-wrap;   /* Preserve whitespace but wrap text */
-  word-break: break-all;   /* Forcefully break long words or strings */
 }
 
 .loading-text {
