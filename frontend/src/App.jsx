@@ -3,8 +3,6 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import Editor from '@monaco-editor/react';
-import { javascript } from '@codemirror/lang-javascript';
-import { okaidia } from '@uiw/codemirror-theme-okaidia';
 
 
 function App() {
