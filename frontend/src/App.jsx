@@ -4,7 +4,6 @@ import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
-import { python } from '@codemirror/lang-python';
 import { okaidia } from '@uiw/codemirror-theme-okaidia';
 
 
