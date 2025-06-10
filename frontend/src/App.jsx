@@ -2,7 +2,7 @@ import {useCallback, useState} from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
-import CodeMirror from '@uiw/react-codemirror';
+import Editor from '@monaco-editor/react';
 import { javascript } from '@codemirror/lang-javascript';
 import { okaidia } from '@uiw/codemirror-theme-okaidia';
 
@@ -13,9 +13,9 @@ function App() {
     const [documentation, setDocumentation] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const onChange = useCallback((value, viewUpdate) => {
+    function handleEditorChange(value, event) {
         setCode(value);
-    }, []);
+    }
     // Make the function async to use await
     const handleSubmit = async () => {
         // Set loading state and clear previous documentation
@@ -65,14 +65,12 @@ function App() {
             <p>Paste your function in any language below and get instant documentation.</p>
 
             <div className="code-editor-container">
-                <CodeMirror
-                    className="code-editor-instance"
+                <Editor
+                    height="20vh" // Set height, e.g., 20% of viewport height
+                    theme="vs-dark" // Use the built-in VS Code dark theme
+                    defaultLanguage="javascript"
                     value={code}
-                    height="200px"
-                    theme={okaidia}
-                    extensions={[javascript({ jsx: true })]}
-                    onChange={onChange}
-                    placeholder="e.g., function greet(name) { return `Hello, ${name}!`; }"
+                    onChange={handleEditorChange}
                 />
             </div>
 
