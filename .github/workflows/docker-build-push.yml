@@ -41,3 +41,6 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           tags: paringle/ai-doc-frontend:latest
+
+          build-args: |
+            VITE_API_BASE_URL=${{ secrets.PROD_API_BASE_URL }}
