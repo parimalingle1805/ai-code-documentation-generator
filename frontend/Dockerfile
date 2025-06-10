@@ -1,5 +1,5 @@
 # --- STAGE 1: Build the React Application ---
-FROM node:20-slim AS build
+FROM node:20 AS build
 
 ARG VITE_API_BASE_URL
 
@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm install
 
 COPY . .
 
