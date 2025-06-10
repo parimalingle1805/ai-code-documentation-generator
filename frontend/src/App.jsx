@@ -69,7 +69,7 @@ function App() {
 
             <div className="editor-container">
                 <Editor
-                    height="30vh"
+                    height="40vh"
                     defaultLanguage="javascript"
                     value={code}
                     onChange={handleEditorChange}
@@ -79,7 +79,7 @@ function App() {
                 {/* This placeholder div will only render when 'code' is empty */}
                 {!code && (
                     <div className="editor-placeholder">
-                        e.g., function greet(name) {'{'}{'  '}return `Hello, ${'${name}'}!`;{'}'}
+                        e.g., function greet(name) {'{'}{'  '}return `Hello, ${'${name}'}!`;{'}' }
                     </div>
                 )}
             </div>
