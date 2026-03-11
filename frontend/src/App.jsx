@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react';
+import { useCallback, useState } from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import blackboardTheme from 'monaco-themes/themes/Blackboard.json';
@@ -84,7 +84,7 @@ function App() {
                 {/* This placeholder div will only render when 'code' is empty */}
                 {!code && (
                     <div className="editor-placeholder">
-                        e.g., function greet(name) {'{'}{'  '}return `Hello, ${'${name}'}!`;{'}' }
+                        e.g., function greet(name: string) {'{'}{'  '}return `Hello, ${'${name}'}!`;{'}'}
                     </div>
                 )}
             </div>
