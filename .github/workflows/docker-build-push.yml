@@ -24,6 +24,17 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # Step 3.5: Run TypeScript build to fail fast on errors
+      - name: Setup Node for TS Build
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install and Build Backend
+        run: |
+          cd backend
+          npm ci
+          npm run build
+
       # Step 4: Build and push the backend image
       - name: Build and push backend image
         uses: docker/build-push-action@v5

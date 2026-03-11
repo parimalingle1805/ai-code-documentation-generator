@@ -70,11 +70,16 @@ function App() {
             <div className="editor-container">
                 <Editor
                     height="40vh"
-                    defaultLanguage="javascript"
+                    defaultLanguage="typescript"
                     value={code}
                     onChange={handleEditorChange}
                     beforeMount={handleEditorWillMount}
                     theme="blackboard"
+                    options={{
+                        minimap: { enabled: false },
+                        scrollBeyondLastLine: false,
+                        wordWrap: 'on'
+                    }}
                 />
                 {/* This placeholder div will only render when 'code' is empty */}
                 {!code && (
