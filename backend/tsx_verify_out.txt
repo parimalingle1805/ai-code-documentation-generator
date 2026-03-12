@@ -1,0 +1,74 @@
+=== Starting Full 3-Agent Pipeline Test ===
+
+Orchestrator Input (Raw Code):
+// Authenticates user and fetches profile
+function loginUser(email, password) {
+    const isAuthentic = hash(password) === db.getPassword(email);
+    if (!isAuthentic) throw new Error("Unauthorized");
+    return db.getProfile(email);
+}
+
+function hash(str) {
+    return 'hashed_' + str;
+}
+
+----------------------------------------
+
+[1/3] Context Architect: Extracting Logic Hash & Context...
+      Γ£à Pass-Through Hash: ecd0ad5f85de607c881990448be6c944e92104aff439d74954e6a550cc817566
+
+[2/3] Documentation Generator: Calling Gemini 3 Flash...
+
+[3/3] Verification Agent: Hashing Output Code Blocks & Auditing Logic Integrity...
+
+=== Gatekeeper Decision ===
+Γ£à SUCCESS: Logic verified. Cryptographic hash of documentation code perfectly matches source.
+
+=== Final Verified Markdown ===
+
+# Authentication Module Documentation
+
+This module provides core authentication logic and utility functions for user access control and profile retrieval.
+
+## Verified Target Functions
+
+### `loginUser`
+Authenticates a user by validating credentials against the database and retrieves the associated user profile.
+
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `email` | `string` | The unique email address of the user. |
+| `password` | `string` | The plain-text password provided by the user. |
+
+**Returns:** `Object` - The user profile data retrieved from `db.getProfile`.
+
+**Throws:** 
+- `Error("Unauthorized")`: If the hashed password does not match the stored credential.
+
+---
+
+### `hash`
+A utility function used to transform a raw string into a prefixed "hashed" format.
+
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `str` | `string` | The input string to be hashed. |
+
+**Returns:** `string` - The resulting string prepended with the `hashed_` identifier.
+
+---
+
+## Analyzed Source Code
+
+```javascript
+// Authenticates user and fetches profile
+function loginUser(email, password) {
+    const isAuthentic = hash(password) === db.getPassword(email);
+    if (!isAuthentic) throw new Error("Unauthorized");
+    return db.getProfile(email);
+}
+
+function hash(str) {
+    return 'hashed_' + str;
+}
+```

@@ -13,10 +13,18 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@genkit-ai/ai": "^1.29.0",
+    "@genkit-ai/core": "^1.29.0",
+    "@genkit-ai/googleai": "^1.28.0",
     "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "genkit": "^1.29.0",
+    "tree-sitter-javascript": "^0.25.0",
+    "tree-sitter-typescript": "^0.23.2",
+    "web-tree-sitter": "^0.26.6",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

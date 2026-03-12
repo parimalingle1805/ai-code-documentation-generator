@@ -1,0 +1,24 @@
+=== Starting Context Architect Flow Test ===
+Orchestrator Input (Raw Code):
+// Authenticates user and fetches profile
+function loginUser(email, password) {
+    const isAuthentic = hash(password) === db.getPassword(email);
+    if (!isAuthentic) throw new Error("Unauthorized");
+    return db.getProfile(email);
+}
+
+Invoking Genkit Flow...
+
+=== Architect Payload Output ===
+{
+  "originalCode": "\n// Authenticates user and fetches profile\nfunction loginUser(email, password) {\n    const isAuthentic = hash(password) === db.getPassword(email);\n    if (!isAuthentic) throw new Error(\"Unauthorized\");\n    return db.getProfile(email);\n}\n    ",
+  "extractedContext": {
+    "functions": [
+      "loginUser"
+    ],
+    "logicHash": "853c8d538033bcf0032012a591950a8bbd903f7bfc49aaf4b11d2ff99ec96e21"
+  }
+}
+==================================
+
+Γ£à Genkit Flow validation passed! ArchitectPayload structure verified.

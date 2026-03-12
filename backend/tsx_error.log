@@ -1,0 +1,11 @@
+D:\Coding\Projects\AI_code_documentation_generator\backend\src\utils\astParser.ts:2
+const Parser = require('web-tree-sitter');
+               ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+    at <anonymous> (D:\Coding\Projects\AI_code_documentation_generator\backend\src\utils\astParser.ts:2:16)
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:654:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v25.2.1

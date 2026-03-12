@@ -1,0 +1,4 @@
+src/agents/ContextArchitect.ts(2,24): error TS2307: Cannot find module 'genkit' or its corresponding type declarations.
+src/agents/ContextArchitect.ts(3,48): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean '../utils/astParser.js'?
+src/testArchitect.ts(1,38): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './agents/ContextArchitect.js'?
+src/testAst.ts(1,48): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './utils/astParser.js'?

@@ -99,3 +99,103 @@ button:disabled {
   z-index: 1; /* Ensures it's on top */
   white-space: pre; /* Respects newlines and spaces */
 }
+
+/* --- Enterprise Pipeline Stepper UI --- */
+.pipeline-stepper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  margin: 20px 0;
+  padding: 20px 30px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.step-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 2;
+  flex: 1;
+}
+
+.step-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #333;
+  border: 2px solid #555;
+  transition: all 0.3s ease;
+}
+
+.step-label {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: pre;
+  transition: color 0.3s ease;
+}
+
+/* Connector Lines */
+.step-node:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background-color: #444;
+  z-index: -1;
+  transition: background-color 0.3s ease;
+}
+
+/* Active State */
+.step-node.active .step-circle {
+  background-color: #0056b3;
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+  animation: pulse-border 2s infinite;
+}
+.step-node.active .step-label {
+  color: #007bff;
+}
+
+/* Completed State */
+.step-node.completed .step-circle {
+  background-color: #1e4620;
+  border-color: #28a745;
+}
+.step-node.completed .step-label {
+  color: #28a745;
+}
+.step-node.completed::after {
+  background-color: #28a745;
+}
+
+/* Error Alert Box */
+.error-alert {
+  width: 80%;
+  background-color: rgba(220, 53, 69, 0.1);
+  border: 1px solid #dc3545;
+  color: #ff6b6b;
+  padding: 15px 20px;
+  border-radius: 6px;
+  margin-top: 15px;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  text-align: left;
+}
+
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7); }
+  70% { box-shadow: 0 0 0 6px rgba(0, 123, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+}

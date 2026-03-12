@@ -1,7 +1,9 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { contextArchitectFlow } from './agents/ContextArchitect.js';
+import { documentationAgentFlow } from './agents/DocumentationAgent.js';
+import { verificationAgentFlow } from './agents/VerificationAgent.js';
 
 // Load environment variables
 dotenv.config();
@@ -13,13 +15,12 @@ interface DocumentRequestPayload {
 
 interface DocumentResponsePayload {
     documentation?: string;
+    isLogicIntact?: boolean;
+    verificationMessage?: string;
     error?: string;
 }
 
-// --- Initializing the Google Gemini model ---
-// 'as string' asserts to TypeScript that we guarantee this environment variable exists
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
-const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
+
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -45,25 +46,47 @@ app.post(
                 return; // Must explicitly return to stop execution
             }
 
-            const prompt = `
-              As an expert technical writer and senior software developer, please generate professional, clear, and concise documentation for the following code snippet.     
-              The documentation should be in a standard format, such as JSDoc or Python Docstrings, depending on the language. Explain what the function does, its parameters (including their types and purpose), and what it returns.    
-              Here is the code:
-              \`\`\`
-              ${code}
-              \`\`\`
-            `;
-
             console.log('Received code snippet:', code);
 
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            const documentation = response.text();
+            // Establish SSE connection headers
+            res.setHeader('Content-Type', 'text/event-stream');
+            res.setHeader('Cache-Control', 'no-cache');
+            res.setHeader('Connection', 'keep-alive');
 
-            res.status(200).json({ documentation });
+            // 1. Architect: Parse AST and Hash Logic
+            res.write('data: ' + JSON.stringify({ step: 1, message: 'Extracting Abstract Syntax Tree and Logic Hash...' }) + '\n\n');
+            const architectPayload = await contextArchitectFlow(code);
+            console.log('Orchestrator Logic Hash:', architectPayload.extractedContext.logicHash);
+
+            // 2. Documenter: Generate Constrained Docs
+            res.write('data: ' + JSON.stringify({ step: 2, message: 'Gemini 3 Flash Context Generation...' }) + '\n\n');
+            const docPayload = await documentationAgentFlow(architectPayload);
+
+            // 3. Gatekeeper: Hash verification on AST
+            res.write('data: ' + JSON.stringify({ step: 3, message: 'Gatekeeper verifying cryptographic code integrity...' }) + '\n\n');
+            const finalResult = await verificationAgentFlow(docPayload);
+
+            if (finalResult.isLogicIntact) {
+                console.log('[SUCCESS] Pipeline:', finalResult.verificationMessage);
+            } else {
+                console.warn('[WARNING] Pipeline:', finalResult.verificationMessage);
+            }
+
+            // 4. Send final payload and close connection
+            res.write(`data: ${JSON.stringify({ step: 'complete', data: {
+                documentation: finalResult.finalMarkdown,
+                isLogicIntact: finalResult.isLogicIntact,
+                verificationMessage: finalResult.verificationMessage
+            }})}\n\n`);
+            res.end();
         } catch (error) {
             console.error('Error generating documentation:', error);
-            res.status(500).json({ error: 'Failed to generate documentation.' });
+            if (res.headersSent) {
+                res.write(`data: ${JSON.stringify({ step: 'error', message: 'Error: AI Provider is currently overloaded or failed. Please try again.' })}\n\n`);
+                res.end();
+            } else {
+                res.status(500).json({ error: 'Failed to generate documentation.' });
+            }
         }
     });
 

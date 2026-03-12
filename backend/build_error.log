@@ -1,0 +1,5 @@
+src/utils/astParser.ts(10,13): error TS2709: Cannot use namespace 'Parser' as a type.
+src/utils/astParser.ts(20,18): error TS2339: Property 'init' does not exist on type 'typeof import("web-tree-sitter", { with: { "resolution-mode": "import" } })'.
+src/utils/astParser.ts(21,18): error TS2351: This expression is not constructable.
+  Type 'typeof import("web-tree-sitter", { with: { "resolution-mode": "import" } })' has no construct signatures.
+src/utils/astParser.ts(60,47): error TS7006: Parameter 'child' implicitly has an 'any' type.

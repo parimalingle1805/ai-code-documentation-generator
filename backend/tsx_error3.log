@@ -1,0 +1,11 @@
+Initializing Tree-Sitter WASM parser...
+Parser initialized successfully.
+
+--- Test Code 1 (Clean formatting) ---
+function calculateTotal(price, taxRate) {
+    const tax = price * taxRate;
+    return price + tax;
+}
+Failed to run AST test: TypeError: cursor.currentNode is not a function
+    at parseAndHash (D:\Coding\Projects\AI_code_documentation_generator\backend\src\utils\astParser.ts:57:33)
+    at runTest (D:\Coding\Projects\AI_code_documentation_generator\backend\src\testAst.ts:26:25)

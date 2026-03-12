@@ -1,0 +1,57 @@
+=== Starting Documentation Pipeline Test ===
+
+Orchestrator Input (Raw Code):
+// Authenticates user and fetches profile
+function loginUser(email, password) {
+    const isAuthentic = hash(password) === db.getPassword(email);
+    if (!isAuthentic) throw new Error("Unauthorized");
+    return db.getProfile(email);
+}
+
+function hash(str) {
+    return 'hashed_' + str;
+}
+
+[1/2] Invoking Context Architect Flow...
+Γ£à ArchitectPayload received. Logic Hash: ecd0ad5f85de607c881990448be6c944e92104aff439d74954e6a550cc817566
+
+[2/2] Invoking Documentation Generator Flow (Calling Gemini Flash)...
+
+=== Generated Documentation (Gemini 3 Flash) ===
+
+# Technical Documentation
+
+## Functions
+
+### `loginUser`
+Authenticates a user by verifying their credentials against the database and retrieves the associated profile.
+
+**Parameters:**
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| `email` | `string` | The email address of the user attempting to log in. |
+| `password` | `string` | The plain-text password provided by the user. |
+
+**Returns:** 
+* `Object`: The user profile object retrieved from the database.
+
+**Exceptions:**
+* `Error`: Throws "Unauthorized" if the hashed password does not match the stored password.
+
+---
+
+### `hash`
+Generates a simple hashed string representation of the provided input.
+
+**Parameters:**
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| `str` | `string` | The input string to be hashed. |
+
+**Returns:** 
+* `string`: The resulting string prefixed with `hashed_`.
+
+================================================
+
+Γ£à Genkit Pipeline complete! Passthrough logic hash: ecd0ad5f85de607c881990448be6c944e92104aff439d74954e6a550cc817566
+≡ƒöÆ Verification Passthrough: SUCCESS

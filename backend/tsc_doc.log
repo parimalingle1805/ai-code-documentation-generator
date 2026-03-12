@@ -1,0 +1,1 @@
+src/agents/DocumentationAgent.ts(3,20): error TS2724: '"@genkit-ai/googleai"' has no exported member named 'gemini25Flash'. Did you mean 'gemini15Flash'?
