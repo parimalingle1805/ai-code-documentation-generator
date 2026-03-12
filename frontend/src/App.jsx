@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
@@ -18,6 +18,40 @@ function App() {
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [cooldownRemaining, setCooldownRemaining] = useState(0);
+
+    // --- On Mount: Check LocalStorage for existing Rate Limit ---
+    useEffect(() => {
+        const storedUnlockTime = localStorage.getItem('rateLimitUntil');
+        if (storedUnlockTime) {
+            const timeRemaining = Math.max(0, Math.ceil((parseInt(storedUnlockTime, 10) - Date.now()) / 1000));
+            if (timeRemaining > 0) {
+                setCooldownRemaining(timeRemaining);
+            } else {
+                localStorage.removeItem('rateLimitUntil');
+            }
+        }
+    }, []);
+
+    // --- Active Cooldown Timer UI Ticker ---
+    useEffect(() => {
+        let interval = null;
+        if (cooldownRemaining > 0) {
+            interval = setInterval(() => {
+                setCooldownRemaining((prev) => {
+                    if (prev <= 1) {
+                        clearInterval(interval);
+                        localStorage.removeItem('rateLimitUntil');
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        }
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [cooldownRemaining]);
 
     const handleCopy = () => {
         navigator.clipboard.writeText(documentation);
@@ -42,6 +76,9 @@ function App() {
         setDocumentation('');
         setIsLogicIntact(null);
         setVerificationMessage('');
+
+        let streamComplete = false;
+        let streamError = false;
 
         try {
             const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/document`, {
@@ -94,11 +131,18 @@ function App() {
                             const parsed = JSON.parse(dataStr);
 
                             if (parsed.step === 'error') {
+                                streamError = true;
                                 setErrorMessage(parsed.message);
+                                if (parsed.type === 'rate_limit' && parsed.waitTime) {
+                                    const unlockTimestamp = Date.now() + (parsed.waitTime * 1000);
+                                    localStorage.setItem('rateLimitUntil', unlockTimestamp.toString());
+                                    setCooldownRemaining(parsed.waitTime);
+                                }
                                 setIsLoading(false);
                                 done = true;
                                 break;
                             } else if (parsed.step === 'complete') {
+                                streamComplete = true;
                                 setPipelineStep(4);
                                 // The backend explicitly sends: res.write(`data: ${JSON.stringify({ step: 'complete', data: { documentation: ... } })}\n\n`);
                                 // So we MUST access parsed.data to get the payload
@@ -123,17 +167,15 @@ function App() {
             }
 
         } catch (error) {
+            streamError = true;
             console.error('Failed to fetch documentation:', error);
             setErrorMessage(`Error: ${error.message}`);
         } finally {
             // Fail-safe: If the loop finishes but documentation is still empty, show an error.
             setIsLoading(false);
-            setDocumentation((prevDoc) => {
-                if (!prevDoc && pipelineStep !== 4) {
-                    setErrorMessage("Error: Stream disconnected before documentation could be generated.");
-                }
-                return prevDoc;
-            });
+            if (!streamComplete && !streamError) {
+                setErrorMessage("Error: Stream disconnected before documentation could be generated.");
+            }
         }
     };
 
@@ -193,8 +235,12 @@ function App() {
                 )}
             </div>
 
-            <button onClick={handleSubmit} disabled={isLoading || !code}>
-                {isLoading ? 'Processing Pipeline...' : 'Generate Documentation'}
+            <button onClick={handleSubmit} disabled={isLoading || !code || cooldownRemaining > 0}>
+                {isLoading 
+                    ? 'Processing Pipeline...' 
+                    : cooldownRemaining > 0 
+                        ? `⏳ Limit Reached. Try again in ${cooldownRemaining}s...` 
+                        : 'Generate Documentation'}
             </button>
 
             {errorMessage && (

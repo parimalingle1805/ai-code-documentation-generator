@@ -18,6 +18,7 @@ interface DocumentResponsePayload {
     isLogicIntact?: boolean;
     verificationMessage?: string;
     error?: string;
+    waitTime?: number;
 }
 
 
@@ -79,13 +80,50 @@ app.post(
                 verificationMessage: finalResult.verificationMessage
             }})}\n\n`);
             res.end();
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error generating documentation:', error);
+            
+            // --- Rate Limit (429) Parsing Logic ---
+            const errorStr = String(error.message || error);
+            let isRateLimit = errorStr.includes('429') || errorStr.toLowerCase().includes('quota');
+            let waitTime = 60; // Default 60s cooldown
+
+            if (isRateLimit) {
+                try {
+                    // Deep extract from GoogleGenerativeAIFetchError structure
+                    if (error.errorDetails && Array.isArray(error.errorDetails)) {
+                        for (const detail of error.errorDetails) {
+                            if (detail.retryDelay) {
+                                waitTime = parseInt(detail.retryDelay, 10);
+                                break;
+                            }
+                        }
+                    } else {
+                        // Fallback stringify to catch it
+                        const jsonStr = JSON.stringify(error, Object.getOwnPropertyNames(error));
+                        const delayMatch = jsonStr.match(/"retryDelay":\s*"(\d+)s"/i);
+                        if (delayMatch && delayMatch[1]) {
+                            waitTime = parseInt(delayMatch[1], 10);
+                        }
+                    }
+                } catch (e) {
+                    console.error("Failed to parse rate limit wait time", e);
+                }
+            }
+
             if (res.headersSent) {
-                res.write(`data: ${JSON.stringify({ step: 'error', message: 'Error: AI Provider is currently overloaded or failed. Please try again.' })}\n\n`);
+                if (isRateLimit) {
+                    res.write(`data: ${JSON.stringify({ step: 'error', type: 'rate_limit', waitTime, message: `Error: AI Quota Exceeded. Please refer to the cooldown timer.` })}\n\n`);
+                } else {
+                    res.write(`data: ${JSON.stringify({ step: 'error', type: 'general', message: 'Error: AI Provider failed. Please try again.' })}\n\n`);
+                }
                 res.end();
             } else {
-                res.status(500).json({ error: 'Failed to generate documentation.' });
+                if (isRateLimit) {
+                    res.status(429).json({ error: 'Quota exceeded', waitTime });
+                } else {
+                    res.status(500).json({ error: 'Failed to generate documentation.' });
+                }
             }
         }
     });
