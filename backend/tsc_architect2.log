@@ -1,1 +1,0 @@
-src/agents/ContextArchitect.ts(2,24): error TS2307: Cannot find module 'genkit' or its corresponding type declarations.
