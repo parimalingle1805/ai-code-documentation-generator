@@ -1,4 +1,7 @@
 import { useCallback, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import blackboardTheme from 'monaco-themes/themes/Blackboard.json';
@@ -14,6 +17,13 @@ function App() {
     const [pipelineStep, setPipelineStep] = useState(0); // 0=idle, 1=architect, 2=documenter, 3=verifier, 4=complete
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(documentation);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
 
     function handleEditorChange(value, event) {
         setCode(value);
@@ -137,6 +147,25 @@ function App() {
         }
     };
 
+    // Markdown interception: dynamically extract the Title and wrap Source Code in <details>
+    let displayTitle = 'Technical Documentation';
+    let renderableDocs = documentation;
+    if (renderableDocs) {
+        // Extract top-level generic headers (e.g., "# Technical Documentation...")
+        const titleMatch = renderableDocs.match(/^#+\s*(.+)(\n|$)/);
+        if (titleMatch) {
+            displayTitle = titleMatch[1].trim();
+            // Strip it so we don't duplicate the title in the body
+            renderableDocs = renderableDocs.replace(/^#+\s*(.+)(\n|$)/, '');
+        }
+
+        // Dynamically wrap the "## Source Code" and its code block in an HTML accordion
+        renderableDocs = renderableDocs.replace(
+            /##\s*Source\s*Code[\s\S]*?(```[\s\S]+?```)/i,
+            '<details>\n<summary>View Source Code</summary>\n\n$1\n\n</details>'
+        );
+    }
+
     return (
         <div className="app-container">
             <h1>AI Code Documentation Generator</h1>
@@ -193,19 +222,44 @@ function App() {
 
             {documentation && !isLoading && (
                 <div className="documentation-display">
-                    <h2>Generated Documentation:</h2>
-                    <SyntaxHighlighter
-                        language="javascript"
-                        style={atomOneDark}
-                        showLineNumbers
-                        wrapLongLines={true}
+                    <div className="doc-header-action-bar">
+                        <h2 className="doc-title">{displayTitle}</h2>
+                        <button className="copy-btn" onClick={handleCopy}>
+                            {copied ? 'Copied!' : 'Copy as Markdown'}
+                        </button>
+                    </div>
+
+                    <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        rehypePlugins={[rehypeRaw]}
+                        components={{
+                            code(props) {
+                                const {children, className, node, ...rest} = props;
+                                const match = /language-(\w+)/.exec(className || '');
+                                return match ? (
+                                    <SyntaxHighlighter
+                                        {...rest}
+                                        PreTag="div"
+                                        children={String(children).replace(/\n$/, '')}
+                                        language={match[1]}
+                                        style={atomOneDark}
+                                        showLineNumbers
+                                        wrapLongLines={true}
+                                    />
+                                ) : (
+                                    <code {...rest} className={className}>
+                                        {children}
+                                    </code>
+                                );
+                            }
+                        }}
                     >
-                        {documentation}
-                    </SyntaxHighlighter>
+                        {renderableDocs}
+                    </ReactMarkdown>
                     {isLogicIntact !== null && (
                         <div className={`verification-badge ${isLogicIntact ? 'success' : 'warning'}`} style={{
                             padding: '12px',
-                            marginTop: '20px',
+                            marginTop: '30px',
                             borderRadius: '6px',
                             backgroundColor: isLogicIntact ? '#1e4620' : '#4a1515',
                             color: isLogicIntact ? '#a3e4b5' : '#fcb6b6',

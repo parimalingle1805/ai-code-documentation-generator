@@ -63,12 +63,141 @@ button:disabled {
 .documentation-display {
   width: 80%;
   background-color: #1a1a1a;
-  padding: 15px;
+  padding: 0 30px 20px 30px; /* Reduced top padding for sticky header */
   border-radius: 8px;
   text-align: left;
-  /* We are removing the white-space rules from here */
-  font-family: 'Courier New', Courier, monospace;
   border: 1px solid #444;
+  line-height: 1.6;
+  font-family: system-ui, -apple-system, sans-serif;
+  position: relative; /* For sticky header context */
+}
+
+/* --- Sticky Header & Action Bar --- */
+.doc-header-action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background-color: rgba(26, 26, 26, 0.95);
+  padding: 20px 0 15px 0;
+  border-bottom: 1px solid #333;
+  margin-bottom: 20px;
+  z-index: 10;
+  backdrop-filter: blur(5px);
+}
+
+.doc-title {
+  color: #fff;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.copy-btn {
+  background-color: #2a2a2a;
+  color: #fff;
+  border: 1px solid #555;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.copy-btn:hover {
+  background-color: #3b3b3b;
+  border-color: #777;
+  transform: translateY(-1px);
+}
+
+.copy-btn:active {
+  transform: translateY(0);
+}
+
+.documentation-display h2,
+.documentation-display h3,
+.documentation-display h4 {
+  color: #fff;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.3rem;
+}
+
+.documentation-display h2:first-child {
+  margin-top: 0;
+  border-bottom: none;
+}
+
+.documentation-display p,
+.documentation-display li {
+  color: #ddd;
+}
+
+.documentation-display pre {
+  margin: 1.5rem 0;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  background-color: #0d0d0d; /* Darker block background */
+}
+
+.documentation-display code:not(pre code) {
+  background-color: rgba(0, 0, 0, 0.4); /* High contrast inline code */
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9em;
+  color: #9cdcfe;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* --- Expandable Details / Summary --- */
+.documentation-display details {
+  background-color: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin: 1.5rem 0;
+}
+
+.documentation-display summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #4daafc;
+  outline: none;
+  font-size: 1.05rem;
+  transition: color 0.2s;
+}
+
+.documentation-display summary:hover {
+  color: #82c8ff;
+}
+
+.documentation-display summary::marker {
+  color: #888;
+}
+
+.documentation-display table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background-color: #111; /* Darker background */
+  border-radius: 6px;
+  overflow: hidden; /* For border radius */
+}
+
+.documentation-display th,
+.documentation-display td {
+  border: 1px solid #333; /* Stronger borders */
+  padding: 0.85rem;
+  text-align: left;
+}
+
+.documentation-display th {
+  background-color: #0d0d0d; /* High contrast header */
+  color: #fff;
+  font-weight: 600;
 }
 
 .loading-text {
