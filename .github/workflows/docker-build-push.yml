@@ -32,7 +32,7 @@ jobs:
       - name: Install and Build Backend
         run: |
           cd backend
-          npm ci
+          npm install
           npm run build
 
       # Step 4: Build and push the backend image
