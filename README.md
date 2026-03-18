@@ -10,7 +10,7 @@ A full-stack application that leverages a **Multi-Agent AI Architecture** powere
 
 ## Application Demo
 
-<video src="https://raw.githubusercontent.com/parimalingle1805/ai-code-documentation-generator/main/frontend/public/AIDocGen.mp4" autoplay loop muted playsinline width="100%"></video>
+<video src="https://github.com/user-attachments/assets/c3a261bf-98bb-4260-a682-85933e46d8f7" autoplay loop muted playsinline width="100%"></video>
 
 
 ## Key Features
