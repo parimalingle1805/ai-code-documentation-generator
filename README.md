@@ -10,7 +10,7 @@ A full-stack application that leverages a **Multi-Agent AI Architecture** powere
 
 ## Application Demo
 
-<img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDZ3MG1lNzJ3cjViZHptMnQ1b3FibnF0MmwyMmhxMmJkdGxvODB5bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lyPdcB5Gs0WPNTgEI1/giphy.gif" alt="AI Code Documentation Generator Demo">
+<video src="https://raw.githubusercontent.com/parimalingle1805/ai-code-documentation-generator/main/frontend/public/AIDocGen.mp4" autoplay loop muted playsinline width="100%"></video>
 
 
 ## Key Features
